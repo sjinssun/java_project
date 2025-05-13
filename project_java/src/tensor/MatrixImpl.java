@@ -38,18 +38,28 @@ class MatrixImpl implements Matrix {
     // 08. CSV 파일로부터 생성
     MatrixImpl(String filepath) {
         elements = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] tokens = line.split(",");
                 List<Scalar> row = new ArrayList<>();
+
                 for (String token : tokens) {
-                    row.add(Factory.createScalar(token.trim()));
+                    try {
+                        row.add(Factory.createScalar(token.trim()));
+                    } catch (NumberFormatException e) {
+                        throw new TensorInvalidInputException("Invalid number in CSV: " + token.trim());
+                    }
                 }
+
                 elements.add(row);
             }
+
+        } catch (TensorFileNotFoundException e) {
+            throw new TensorFileNotFoundException("CSV file not found: " + filepath);
         } catch (IOException e) {
-            throw new TensorInvalidInputException("Failed to read CSV file: " + filepath);
+            throw new TensorFileReadException("Failed to read CSV file: " + filepath);
         }
     }
 
