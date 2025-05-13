@@ -41,11 +41,11 @@ class VectorImpl implements Vector {
     }
 
     @Override
-    public void setVectorElement(int index, Scalar value) {
+    public void setVectorElement(int index, String value) {
         if (index < 0 || index >= elements.size()) {
             throw new InvalidVectorAccessException("Invalid index: " + index);
         }
-        elements.set(index, value);
+        elements.set(index, Factory.createScalar(value));
     }
 
     @Override

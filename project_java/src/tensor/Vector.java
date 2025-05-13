@@ -4,7 +4,7 @@ public interface Vector extends Cloneable {
 
     // 11. 요소 조회 및 설정
     Scalar getVectorElement(int index);
-    void setVectorElement(int index, Scalar value);
+    void setVectorElement(int index, String value);
 
     // 13. 크기 정보
     int getVectorSize();

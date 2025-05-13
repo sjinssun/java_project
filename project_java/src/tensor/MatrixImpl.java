@@ -185,13 +185,14 @@ class MatrixImpl implements Matrix {
             throw new MatrixMulMismatchException("Matrix multiplication mismatch: left.columns != this.rows");
         }
 
-        int rows = other.getMatrixRowCount();
-        int cols = getMatrixColumnCount();
-        int inner = getMatrixRowCount();
+        int rows = other.getMatrixRowCount();       // A의 행
+        int cols = getMatrixColumnCount();          // B의 열
+        int inner = getMatrixRowCount();            // 공통 차원 (A의 열 == B의 행)
+
         List<List<Scalar>> newElements = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {
-            List<Scalar> row = new ArrayList<>();
+            List<Scalar> newRow = new ArrayList<>();
             for (int j = 0; j < cols; j++) {
                 BigDecimal sum = BigDecimal.ZERO;
                 for (int k = 0; k < inner; k++) {
@@ -199,14 +200,14 @@ class MatrixImpl implements Matrix {
                     BigDecimal b = new BigDecimal(getMatrixElement(k, j).getValue());
                     sum = sum.add(a.multiply(b));
                 }
-                row.add(Factory.createScalar(sum.toPlainString()));
+                newRow.add(Factory.createScalar(sum.toPlainString()));
             }
-            newElements.add(row);
+            newElements.add(newRow);
         }
 
-        for (int i = 0; i < rows; i++) {
-            elements.set(i, newElements.get(i));
-        }
+        // 기존 elements의 내부 데이터 교체 (final 필드라 재할당은 불가)
+        elements.clear();
+        elements.addAll(newElements);
     }
 
         @Override
