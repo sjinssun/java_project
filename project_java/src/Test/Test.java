@@ -80,7 +80,7 @@ public class Test {
         System.out.println("no.11v | Vector 특정 요소 접근 및 설정");
         Scalar element = vector3.getVectorElement(2);
         System.out.println(indent + "접근 (index 2) = " + element.getValue());
-        vector3.setVectorElement(2, "7.77");
+        vector3.setVectorElement(2, Factory.createScalar("7"));
         System.out.println(indent + "수정 후 (index 2) = " + vector3.getVectorElement(2).getValue());
         System.out.println();
 

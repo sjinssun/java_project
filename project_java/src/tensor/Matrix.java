@@ -1,92 +1,83 @@
-    package tensor;
+package tensor;
 
-    public interface Matrix extends Cloneable {
+public interface Matrix extends Cloneable, Comparable<Matrix> {
+    // 11m. 특정 위치의 요소를 지정/조회할 수 있다. (Scalar)
+    Scalar getMatrixElement(int row, int col);
+    void setMatrixElement(int row, int col, Scalar value);
 
-        // 11. 요소 접근
-        Scalar getMatrixElement(int row, int col);
-        void setMatrixElement(int row, int col, Scalar value);
+    // 13m. 크기 정보를 조회할 수 있다.
+    int getMatrixRowCount();
+    int getMatrixColumnCount();
 
-        // 13. 행/열 정보
-        int getMatrixRowCount();
-        int getMatrixColumnCount();
+    // 14m. 행렬 객체를 콘솔에 출력할 수 있다.
+    String toString();
 
-        // 17. deep copy
-        Matrix clone();
+    // 15m. 행렬 객체의 동등성 판단을 할 수 있다.
+    boolean equals(Object other);
 
-        // 14. 문자열 출력
-        @Override
-        String toString();
-        String toString(boolean rounding);
+    // 17m. 행렬 객체 복제를 할 수 있다.
+    Matrix clone();
 
-        // 15. equals
-        @Override
-        boolean equals(Object obj);
+    // 22. 행렬은 다른 행렬과 덧셈이 가능하다.
+    void add(Matrix other);
+    // 23. 행렬은 다른 행렬과 곱셈이 가능하다.
+    void multiply(Matrix other);
+    // 오른쪽 행렬로서 곱해지는 경우.
+    void multiplyRight(Matrix other);
 
-        // 22. 비정적 행렬 연산
-        void add(Matrix other);
-        void multiply(Matrix other);
-        void multiplyRight(Matrix other);
+    // 32. 행렬은 다른 행렬과 가로로 합쳐질 수 있다.
+    void concatColumns(Matrix other);
+    // 33. 행렬은 다른 행렬과 세로로 합쳐질 수 있다.
+    void concatRows(Matrix other);
 
-        // 28. 정적 행렬 연산
-        static Matrix add(Matrix a, Matrix b) {
-            Matrix copy = a.clone();
-            copy.add(b);
-            return copy;
-        }
-        //29.
-        static Matrix multiply(Matrix a, Matrix b) {
-            Matrix copy = a.clone();
-            copy.multiply(b);
-            return copy;
-        }
-        // 34. 행/열 추출
-        Vector extractRow(int rowIndex);
-        Vector extractColumn(int colIndex);
+    // 34. 행렬은 특정 행을 벡터 형태로 추출해 줄 수 있다.
+    Vector extractRow(int rowIndex);
+    // 35. 행렬은 특정 열을 벡터 형태로 추춣해 줄 수 있다.
+    Vector extractColumn(int columnIndex);
 
-        // 36. 부분행렬, 소행렬
-        Matrix subMatrix(int startRow, int endRow, int startCol, int endCol);
-        Matrix minor(int rowToExclude, int colToExclude);
+    // 36. 행렬은 특정 범위의 부분 행렬을 추출해 줄 수 있다.
+    Matrix subMatrix(int startRow, int endRow, int startCol, int endCol);
+    // 37. 행렬은 특정 범위의 부분 행렬을 추출해 줄 수 있다.
+    Matrix minor(int rowToExclude, int colToExclude);
 
-        // 38. 전치행렬, 대각합
-        Matrix transpose();
-        Scalar trace();
+    // 38. 행렬은 전치행렬을 (새로 생성하여) 구해줄 수 있다.
+    Matrix transpose();
+    // 39. 행렬은 대각 요소의 합을 구해줄 수 있다.
+    Scalar trace();
 
-        // 40. 성질
-        boolean isSquare();
-        boolean isUpperTriangular();
-        boolean isLowerTriangular();
-        boolean isIdentityMatrix();
-        boolean isZeroMatrix();
+    // 40. 행렬은 자신이 정사각 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isSquare();
+    // 41. 행렬은 자신이 상삼각 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isUpperTriangular();
+    // 42. 행렬은 자신이  하삼각 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isLowerTriangular();
+    // 43. 행렬은 자신이 단위 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isIdentityMatrix();
+    // 44. 행렬은 자신이 영 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isZeroMatrix();
 
-        // 45. 행/열 교환
-        void swapRows(int row1, int row2);
-        void swapColumns(int col1, int col2);
+    // 45. 행렬은 특정 두 행의 위치를 맞교환할 수 있다.
+    void swapRows(int row1, int row2);
+    // 46. 행렬은 특정 두 열의 위치를 맞교환할 수 있다.
+    void swapColumns(int col1, int col2);
 
-        // 47. 행/열 스케일
-        void scaleRow(int row, Scalar scalar);
-        void scaleColumn(int col, Scalar scalar);
+    // 47. 행렬은 특정 행에 상수배(스칼라)를 할 수 있다.
+    void scaleRow(int row, Scalar scalar);
+    // 48. 행렬은 특정 열에 상수배(스칼라)를 할 수 있다.
+    void scaleColumn(int column, Scalar scalar);
 
-        // 49. 행/열 스케일 덧셈
-        void addScaledRow(int targetRow, int sourceRow, Scalar scalar);
-        void addScaledColumn(int targetCol, int sourceCol, Scalar scalar);
+    // 49. 행렬은 특정 행에 다른 행의 상수배를 더할 수 있다.
+    void addScaledRow(int targetRow, int sourceRow, Scalar scalar);
+    // 50. 행렬은 특정 열에 다른 열의 상수배를 더할 수 있다.
+    void addScaledColumn(int targetCol, int sourceCol, Scalar scalar);
 
-        // 51. RREF
-        Matrix toRref();
-        boolean isRref();
+    // 51. 행렬은 자신으로부터 RREF 행렬을 구해서 반환해 줄 수 있다.
+    Matrix toRref();
+    // 52. 행렬은 자신이 RREF 행렬인지 여부를 판별해 줄 수 있다.
+    boolean isRref();
 
-        // 53. 행렬식, 역행렬
-        Scalar determinant();
-        Matrix inverse();
-
-        // 32. 연결
-        Matrix concatColumns(Matrix other);
-        Matrix concatRows(Matrix other);
-
-        static Matrix concatColumns(Matrix a, Matrix b) {
-            return a.concatColumns(b);
-        }
-
-        static Matrix concatRows(Matrix a, Matrix b) {
-            return a.concatRows(b);
-        }
-    }
+    // 53. 행렬은 자신의 행렬식을 구해줄 수 있다.
+    Scalar determinant();
+    // 54. 행렬은 자신의 역행렬을 구해줄 수 있다.
+    Matrix inverse();
+}

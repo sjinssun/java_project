@@ -1,31 +1,29 @@
 package tensor;
 
-public interface Vector extends Cloneable {
-
-    // 11. 요소 조회 및 설정
+public interface Vector extends Cloneable, Comparable<Vector> {
+    // 11v. 특정 위치의 요소를 지정/조회할 수 있다. (Scalar)
     Scalar getVectorElement(int index);
-    void setVectorElement(int index, String value);
+    void setVectorElement(int index, Scalar value);
 
-    // 13. 크기 정보
+    // 13v. 크기 정보를 조회할 수 있다.
     int getVectorSize();
 
-    // 17. 깊은 복사
+    // 14v. 벡터 객체를 콘솔에 출력할 수 있다.
+    String toString();
+
+    // 15v. 벡터 객체의 동등성 판단을 할 수 있다.
+    boolean equals(Object other);
+
+    // 17v. 벡터 객체 복제를 할 수 있다.
     Vector clone();
 
-    // 14. 문자열 출력
-    @Override
-    String toString();
-    String toString(boolean rounding);
+    // 20. 벡터는 다른 벡터와 덧셈이 가능하다.
+    void add(Vector other);
+    // 21. 벡터는 다른 스칼라와 곱셈이 가능하다.
+    void multiply(Scalar other);
 
-    // 15. 동등성 비교
-    @Override
-    boolean equals(Object obj);
-
-    // 22. 비정적 연산
-    void multiply(Scalar scalar);
-    void add(Vector b);
-
-    // 31~32. 변환
-    Matrix toColumnMatrix(); // <-- 추가
-    Matrix toRowMatrix();    // <-- 추가
+    // 30. n-차원 벡터 객체는 자신으로부터 nx1 행렬을 생성하여 반환할 수 있다.
+    Matrix toColumnMatrix();
+    // 31. n-차원 벡터 객체는 자신으로부터 1xn 행렬을 생성하여 반환할 수 있다.
+    Matrix toRowMatrix();
 }

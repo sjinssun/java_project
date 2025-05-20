@@ -28,12 +28,12 @@ public class Tensors {
 
     // 28. 전달받은 두 행렬의 덧셈
     public static Matrix add(Matrix a, Matrix b) {
-        return Matrix.add(a, b); // MatrixImpl에서 내부 구현 위임
+        return MatrixImpl.add(a, b); // MatrixImpl에서 내부 구현 위임
     }
 
     // 29. 전달받은 두 행렬의 곱셈
     public static Matrix multiply(Matrix a, Matrix b) {
-        return Matrix.multiply(a, b); // MatrixImpl에서 내부 구현 위임
+        return MatrixImpl.multiply(a, b); // MatrixImpl에서 내부 구현 위임
     }
 
     // 32. 전달받은 두 행렬의 가로 연결 (concat columns)

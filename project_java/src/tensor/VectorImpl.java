@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-class VectorImpl implements Vector {
+public class VectorImpl implements Vector {
     private final List<Scalar> elements;
 
     // 03. 고정값 생성자
@@ -41,11 +41,11 @@ class VectorImpl implements Vector {
     }
 
     @Override
-    public void setVectorElement(int index, String value) {
+    public void setVectorElement(int index, Scalar value) {
         if (index < 0 || index >= elements.size()) {
             throw new InvalidVectorAccessException("Invalid index: " + index);
         }
-        elements.set(index, Factory.createScalar(value));
+        elements.set(index, value);
     }
 
     @Override
@@ -81,21 +81,6 @@ class VectorImpl implements Vector {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < elements.size(); i++) {
             sb.append(elements.get(i).getValue());
-            if (i < elements.size() - 1) sb.append(", ");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
-
-    @Override
-    public String toString(boolean rounding) {
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < elements.size(); i++) {
-            String val = elements.get(i).getValue();
-            if (rounding) {
-                val = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP).toPlainString();
-            }
-            sb.append(val);
             if (i < elements.size() - 1) sb.append(", ");
         }
         sb.append("]");
@@ -154,5 +139,11 @@ class VectorImpl implements Vector {
         Vector result = vector.clone();
         result.multiply(scalar);
         return result;
+    }
+
+
+    @Override
+    public int compareTo(Vector o) {
+        return 0;
     }
 }

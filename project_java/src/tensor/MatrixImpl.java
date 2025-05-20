@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class MatrixImpl implements Matrix {
+public class MatrixImpl implements Matrix {
     private final List<List<Scalar>> elements;
 
     // 06. 고정값으로 채운 m x n 행렬
@@ -112,22 +112,13 @@ class MatrixImpl implements Matrix {
         return elements.isEmpty() ? 0 : elements.get(0).size();
     }
 
-    // 14. 문자열 출력
-    @Override
+    //14.문자열 출력
     public String toString() {
-        return toString(true);
-    }
-
-    @Override
-    public String toString(boolean rounding) {
         StringBuilder sb = new StringBuilder();
         for (List<Scalar> row : elements) {
             for (int j = 0; j < row.size(); j++) {
                 Scalar s = row.get(j);
-                String val = s.getValue();
-                if (rounding) {
-                    val = new BigDecimal(val).setScale(2, RoundingMode.HALF_UP).toPlainString();
-                }
+                String val = s.getValue(); // 그냥 getValue 그대로 출력
                 sb.append(val);
                 if (j < row.size() - 1) sb.append(" ");
             }
@@ -135,7 +126,6 @@ class MatrixImpl implements Matrix {
         }
         return sb.toString();
     }
-
     // 15. equals
     @Override
     public boolean equals(Object obj) {
@@ -255,27 +245,34 @@ class MatrixImpl implements Matrix {
         return copy;
     }
 
+    // 32. 비정적 concatColumns (열 방향 이어붙임)
     @Override
-    public Matrix concatColumns(Matrix other) {
-        if (this.getMatrixRowCount() != other.getMatrixRowCount()) {
-            throw new TensorSizeMismatchException("Row counts must match for column concatenation.");
+    public void concatColumns(Matrix other) {
+        if (getMatrixRowCount() != other.getMatrixRowCount()) {
+            throw new TensorSizeMismatchException("matrix columns size is different");
         }
 
-        int rows = getMatrixRowCount();
-        int cols1 = getMatrixColumnCount();
-        int cols2 = other.getMatrixColumnCount();
-        String[][] result = new String[rows][cols1 + cols2];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols1; j++) {
-                result[i][j] = getMatrixElement(i, j).getValue();
-            }
-            for (int j = 0; j < cols2; j++) {
-                result[i][cols1 + j] = other.getMatrixElement(i, j).getValue();
+        for (int i = 0; i < getMatrixRowCount(); i++) {
+            for (int j = 0; j < other.getMatrixColumnCount(); j++) {
+                elements.get(i).add(other.getMatrixElement(i, j));
             }
         }
+    }
 
-        return Factory.createMatrixFromArray(result);
+    // 33. 비정적 concatRows (행 방향 이어붙임)
+    @Override
+    public void concatRows(Matrix other) {
+        if (getMatrixColumnCount() != other.getMatrixColumnCount()) {
+            throw new TensorSizeMismatchException("matrix row size is different");
+        }
+
+        for (int i = 0; i < other.getMatrixRowCount(); i++) {
+            List<Scalar> newRow = new ArrayList<>();
+            for (int j = 0; j < other.getMatrixColumnCount(); j++) {
+                newRow.add(other.getMatrixElement(i, j));
+            }
+            elements.add(newRow);
+        }
     }
 
     // 32. 정적 concatColumns
@@ -290,32 +287,6 @@ class MatrixImpl implements Matrix {
         Matrix copy = a.clone();
         copy.concatRows(b);
         return copy;
-    }
-
-    // 33. 행 방향 연결 (세로로 이어붙임)
-    @Override
-    public Matrix concatRows(Matrix other) {
-        if (this.getMatrixColumnCount() != other.getMatrixColumnCount()) {
-            throw new TensorSizeMismatchException("Column counts must match for row concatenation.");
-        }
-
-        int rows1 = getMatrixRowCount();
-        int rows2 = other.getMatrixRowCount();
-        int cols = getMatrixColumnCount();
-        String[][] result = new String[rows1 + rows2][cols];
-
-        for (int i = 0; i < rows1; i++) {
-            for (int j = 0; j < cols; j++) {
-                result[i][j] = getMatrixElement(i, j).getValue();
-            }
-        }
-        for (int i = 0; i < rows2; i++) {
-            for (int j = 0; j < cols; j++) {
-                result[rows1 + i][j] = other.getMatrixElement(i, j).getValue();
-            }
-        }
-
-        return Factory.createMatrixFromArray(result);
     }
 
     // 34. 행 추출
@@ -712,6 +683,11 @@ class MatrixImpl implements Matrix {
         }
 
         return identity;
+    }
+
+    @Override
+    public int compareTo(Matrix o) {
+        return 0;
     }
 
     // 유효성 검사 메서드
