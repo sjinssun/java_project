@@ -69,10 +69,11 @@ class ScalarImpl implements Scalar {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ScalarImpl)) return false;
-        ScalarImpl other = (ScalarImpl) obj;
-        return this.value.compareTo(other.value) == 0;
+        if (obj instanceof Scalar s) {
+            return getValue().equals(s.getValue()); // 단순 문자열 비교
+        } else {
+            return false;
+        }
     }
 
     @Override
