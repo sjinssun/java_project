@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileNotFoundException;
 
 public class MatrixImpl implements Matrix {
     private final List<List<Scalar>> elements;
@@ -36,32 +37,45 @@ public class MatrixImpl implements Matrix {
     }
 
     // 08. CSV 파일로부터 생성
-    MatrixImpl(String filepath) {
+    public MatrixImpl(String filepath) {
         elements = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
-            while ((line = br.readLine()) != null) {
+            int expectedColCount = -1;
+
+            while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(",");
                 List<Scalar> row = new ArrayList<>();
 
                 for (String token : tokens) {
                     try {
                         row.add(Factory.createScalar(token.trim()));
-                    } catch (NumberFormatException e) {
+                    } catch (RuntimeException e) {
                         throw new TensorInvalidInputException("Invalid number in CSV: " + token.trim());
                     }
+                }
+
+                if (expectedColCount == -1) {
+                    expectedColCount = row.size(); // 첫 줄로 열 수 고정
+                } else if (row.size() != expectedColCount) {
+                    throw new TensorInvalidInputException("Inconsistent column count in CSV file");
                 }
 
                 elements.add(row);
             }
 
-        } catch (TensorFileNotFoundException e) {
-            throw new TensorFileNotFoundException("CSV file not found: " + filepath);
+            if (elements.isEmpty()) {
+                throw new TensorInvalidInputException("Empty CSV file: " + filepath);
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new TensorInvalidInputException("CSV file not found: " + filepath);
         } catch (IOException e) {
-            throw new TensorFileReadException("Failed to read CSV file: " + filepath);
+            throw new TensorInvalidInputException("Error reading CSV file: " + filepath);
         }
     }
+
 
     // 09. 2차원 배열로 생성
     MatrixImpl(String[][] values) {
@@ -240,8 +254,8 @@ public class MatrixImpl implements Matrix {
 
     // 29. static multiply
     public static Matrix multiply(Matrix a, Matrix b) {
-        Matrix copy = a.clone();
-        copy.multiply(b);
+        Matrix copy = b.clone();
+        copy.multiply(a);
         return copy;
     }
 
@@ -632,7 +646,7 @@ public class MatrixImpl implements Matrix {
     @Override
     public Matrix inverse() {
         if (!isSquare()) {
-            throw new NonSquareMatrixException("Only square matrices can be inverted.");
+            throw new MatrixNonSquareException("Only square matrices can be inverted.");
         }
 
         int size = getMatrixRowCount();
@@ -693,13 +707,13 @@ public class MatrixImpl implements Matrix {
     // 유효성 검사 메서드
     private void checkRowIndex(int row) {
         if (row < 0 || row >= getMatrixRowCount()) {
-            throw new TensorInvalidInputException("Invalid row index: " + row);
+            throw new NonSquareMatrixException("Invalid row index: " + row);
         }
     }
 
     private void checkColumnIndex(int col) {
         if (col < 0 || col >= getMatrixColumnCount()) {
-            throw new TensorInvalidInputException("Invalid column index: " + col);
+            throw new NonSquareMatrixException("Invalid column index: " + col);
         }
     }
 

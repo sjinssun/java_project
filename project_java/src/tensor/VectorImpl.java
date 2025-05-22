@@ -35,7 +35,7 @@ public class VectorImpl implements Vector {
     @Override
     public Scalar getVectorElement(int index) {
         if (index < 0 || index >= elements.size()) {
-            throw new InvalidVectorAccessException("Invalid index: " + index);
+            throw new TensorInvalidIndexException ("Invalid index: " + index);
         }
         return elements.get(index);
     }
