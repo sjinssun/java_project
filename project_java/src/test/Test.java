@@ -12,7 +12,7 @@ public class Test {
         try {
             Scalar wrongScalar = Factory.createScalar("abc");
         } catch (TensorInvalidInputException e) {
-            System.out.println("예외처리 | 잘못된 Scalar 생성 입력 Factory.createScalar(\"a\") : " + e.getMessage());
+            System.out.println("예외처리 | 잘못된 Scalar 생성 입력 Factory.createScalar(\"abc\") : " + e.getMessage());
         }
 
         //no.02
@@ -22,7 +22,7 @@ public class Test {
         try {
             Scalar wrongRandomScalar = Factory.createRandomScalar("5.0", "-5.0");
         } catch (TensorInvalidInputException e) {
-            System.out.println("예외처리 | 잘못된 Scalar 범위 Factory.createRandomScalar(\"-5.0\", \"5.0\") : " + e.getMessage());
+            System.out.println("예외처리 | 잘못된 Scalar 범위 Factory.createRandomScalar(\"5.0\", \"-5.0\") : " + e.getMessage());
         }
 
         //no.03
@@ -54,7 +54,7 @@ public class Test {
 
         //no.08
         System.out.println("no.08 | csv 파일로부터 m x n 행렬을 생성할 수 있다.");
-        String filepath = "test/3by3matrix.csv";
+        String filepath = "src/test/3by3matrix.csv";
         try {
             System.out.println("1. matrix from csv file(" + filepath + ")");
             matrix = Factory.createMatrixFromCsv(filepath);
@@ -283,123 +283,123 @@ public class Test {
                 Tensors.multiply(matrix1, matrix2).equals(
                         Factory.createMatrixFromArray(new String[][]{{"4.0", "5.0"}, {"10.0", "11.0"}})));
 
-        //no.30
+
         //no.30
         String[] vectorArray = {"10.0", "20.0", "30.0"};
         vector = Factory.createVectorFromArray(vectorArray);
         matrix1 = vector.toColumnMatrix();
         System.out.println("no.30 | Vector -> Column Matrix 변환 확인 : " + matrix1.equals(Factory.createMatrixFromArray(new String[][]{{"10.0"}, {"20.0"}, {"30.0"}})));
 
-//no.31
+        //no.31
         matrix2 = vector.toRowMatrix();
         System.out.println("no.31 | Vector -> Row Matrix 변환 확인 : " + matrix2.equals(Factory.createMatrixFromArray(new String[][]{{"10.0", "20.0", "30.0"}})));
 
-//no.32
+        //no.32
         matrix1 = Factory.createMatrixFromArray(new String[][]{{"1.0", "1.0"}, {"1.0", "1.0"}});
         matrix2 = Factory.createMatrixFromArray(new String[][]{{"2.0"}, {"2.0"}});
         System.out.println("no.32 | Matrix 가로 연결 결과 확인 : " + Tensors.concatColumns(matrix1, matrix2).equals(
                 Factory.createMatrixFromArray(new String[][]{{"1.0", "1.0", "2.0"}, {"1.0", "1.0", "2.0"}})));
 
-//no.33
+        //no.33
         matrix1 = Factory.createMatrixFromArray(new String[][]{{"5.0", "5.0"}});
         matrix2 = Factory.createMatrixFromArray(new String[][]{{"10.0", "10.0"}});
         System.out.println("no.33 | Matrix 세로 연결 결과 확인 : " + Tensors.concatRows(matrix1, matrix2).equals(
                 Factory.createMatrixFromArray(new String[][]{{"5.0", "5.0"}, {"10.0", "10.0"}})));
 
-//no.34
+        //no.34
         array2d = new String[][]{{"1.0", "2.0"}, {"6.0", "12.0"}};
         matrix = Factory.createMatrixFromArray(array2d);
         vector = matrix.extractRow(1);
         System.out.println("no.34 | 특정 행 추출 결과 확인 : " + vector.equals(Factory.createVectorFromArray(new String[]{"6.0", "12.0"})));
 
-//no.35
+        //no.35
         vector = matrix.extractColumn(0);
         System.out.println("no.35 | 특정 열 추출 결과 확인 : " + vector.equals(Factory.createVectorFromArray(new String[]{"1.0", "6.0"})));
 
-//no.36
+        //no.36
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "8.0"}, {"3.0", "4.0"}});
         Matrix sub = matrix.subMatrix(0, 0, 1, 1);
         System.out.println("no.36 | 부분 행렬 추출 결과 확인 : " + sub.equals(Factory.createMatrixFromArray(new String[][]{{"8.0"}})));
 
-//no.37
+        //no.37
         Matrix minor = matrix.minor(0, 0);
         System.out.println("no.37 | Minor 행렬 추출 결과 확인 : " + minor.equals(Factory.createMatrixFromArray(new String[][]{{"4.0"}})));
 
-//no.38
+        //no.38
         Matrix transpose = matrix.transpose();
         System.out.println("no.38 | 전치 행렬 결과 확인 : " + transpose.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "3.0"}, {"8.0", "4.0"}})));
 
-//no.39
+        //no.39
         matrix = Factory.createMatrixFromArray(new String[][]{{"5.0", "0.0"}, {"0.0", "4.0"}});
         System.out.println("no.39 | 대각 합(trace) 확인 (5+4=9) : " + matrix.trace().equals(Factory.createScalar("9.0")));
 
-//no.40
+        //no.40
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         System.out.println("no.40 | 정사각 행렬 여부 확인 : " + matrix.isSquare());
 
-//no.41
+        //no.41
         matrix = Factory.createMatrixFromArray(new String[][]{{"3.0", "2.0"}, {"0.0", "4.0"}});
         System.out.println("no.41 | 상삼각 행렬 여부 확인 : " + matrix.isUpperTriangular());
 
-//no.42
+        //no.42
         matrix = Factory.createMatrixFromArray(new String[][]{{"3.0", "0.0"}, {"2.0", "4.0"}});
         System.out.println("no.42 | 하삼각 행렬 여부 확인 : " + matrix.isLowerTriangular());
 
-//no.43
+        //no.43
         matrix = Factory.createIdentityMatrix(2);
         System.out.println("no.43 | 단위 행렬 여부 확인 : " + matrix.isIdentityMatrix());
 
-//no.44
+        //no.44
         matrix = Factory.createMatrix(2, 2, "0.0");
         System.out.println("no.44 | 영 행렬 여부 확인 : " + matrix.isZeroMatrix());
 
-//no.45
+        //no.45
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         matrix.swapRows(0, 1);
         System.out.println("no.45 | 행 교환 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"3.0", "4.0"}, {"1.0", "2.0"}})));
 
-//no.46
+        //no.46
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         matrix.swapColumns(0, 1);
         System.out.println("no.46 | 열 교환 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "3.0"}})));
 
-//no.47
+        //no.47
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         scalar = Factory.createScalar("2.0");
         matrix.scaleRow(1, scalar);
         System.out.println("no.47 | 행 스칼라 배 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"6.0", "8.0"}})));
 
-//no.48
+        //no.48
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         matrix.scaleColumn(0, scalar);
         System.out.println("no.48 | 열 스칼라 배 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "2.0"}, {"6.0", "4.0"}})));
 
-//no.49
+        //no.49
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         scalar = Factory.createScalar("2.0");
         matrix.addScaledRow(0, 1, scalar);
         System.out.println("no.49 | 행 상수배 덧셈 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"7.0", "10.0"}, {"3.0", "4.0"}})));
 
-//no.50
+        //no.50
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         scalar = Factory.createScalar("2.0");
         matrix.addScaledColumn(1, 0, scalar);
         System.out.println("no.50 | 열 상수배 덧셈 결과 확인 : " +matrix.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "4.0"}, {"3.0", "10.0"}})));
 
-//no.51
+        //no.51
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"0.0", "1.0"}});
         Matrix rref = matrix.toRref();
         System.out.println("no.51 | RREF 변환 결과 확인 : " + rref.isRref());
         System.out.println(rref);
 
-//no.52
+        //no.52
         System.out.println("no.52 | RREF 여부 확인 : " + rref.isRref());
 
-//no.53
+        //no.53
         matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
         System.out.println("no.53 | 행렬식 확인 (1*4 - 2*3 = -2) : " + matrix.determinant().equals(Factory.createScalar("-2.0")));
 
-//no.54
+        //no.54
         matrix = Factory.createMatrixFromArray(new String[][]{{"4.0", "7.0"}, {"2.0", "6.0"}});
         Matrix expectedInv = Factory.createMatrixFromArray(new String[][]{{"0.6", "-0.7"}, {"-0.2", "0.4"}});
         Matrix inv = matrix.inverse();
