@@ -10,11 +10,15 @@ public class VectorImpl implements Vector {
 
     // 03. 고정값 생성자
     VectorImpl(int dimension, String value) {
+        if (dimension < 0) {
+            throw new TensorInvalidDimensionException();
+        }
         elements = new ArrayList<>();
         for (int i = 0; i < dimension; i++) {
-            elements.add(Factory.createScalar(value));
+            elements.add(new ScalarImpl(value));
         }
     }
+
 
     // 04. 랜덤값 생성자
     VectorImpl(int dimension, String min, String max) {

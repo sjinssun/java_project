@@ -46,11 +46,11 @@ public class Test {
 
         //no.06
         Matrix matrix = Factory.createMatrix(3, 3, "2.0");
-        System.out.println("no.06 | 지정한 하나의 값을 모든 요소의 값으로 채워진 Matrix 생성. Factory.createMatrix(4, 4, \"2.0\") :\n"+matrix);
+        System.out.println("no.06 | 지정한 하나의 값을 모든 요소의 값으로 채워진 Matrix 생성. Factory.createMatrix(3, 3, \"2.0\") :\n"+matrix);
 
         //no.07
         matrix = Factory.createRandomMatrix(3, 3, "-3.0", "3.0");
-        System.out.println("no.07 | Random Matrix 생성 (-5.0 ~ 5.0). Factory.createRandomMatrix(3, 3, \"-3.0\", \"3.0\") :\n" + matrix);
+        System.out.println("no.07 | Random Matrix 생성 (-3.0 ~ 3.0). Factory.createRandomMatrix(3, 3, \"-3.0\", \"3.0\") :\n" + matrix);
 
         //no.08
         System.out.println("no.08 | csv 파일로부터 m x n 행렬을 생성할 수 있다.");
@@ -96,7 +96,8 @@ public class Test {
 
         //no.10
         matrix = Factory.createIdentityMatrix(4);
-        System.out.println("no.10 | 단위행렬 생성. Factory.createIdentityMatrix(4) : " + matrix);
+        System.out.println("no.10 | 단위행렬 생성. Factory.createIdentityMatrix(4) : " );
+        System.out.println(matrix);
 
         try {
             Matrix wrongMatrix = Factory.createIdentityMatrix(-10);

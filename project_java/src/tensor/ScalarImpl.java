@@ -7,22 +7,26 @@ class ScalarImpl implements Scalar {
 
     // 01. 고정 값 생성자
     ScalarImpl(String value) {
-        if (!isValidNumber(value)) {
-            throw new TensorInvalidInputException("Invalid scalar input: " + value);
+        try {
+            this.value = new BigDecimal(value);
+        } catch (NumberFormatException e) {
+            throw new TensorInvalidInputException(value);
         }
-        this.value = new BigDecimal(value);
     }
-
     // 02. 랜덤 범위 생성자
     ScalarImpl(String min, String max) {
-        if (!isValidNumber(min) || !isValidNumber(max)) {
-            throw new TensorInvalidInputException("Invalid scalar range: " + min + ", " + max);
+        try {
+            BigDecimal minVal = new BigDecimal(min);
+            BigDecimal maxVal = new BigDecimal(max);
+            if (minVal.compareTo(maxVal) > 0) {
+                throw new TensorInvalidInputException();
+            }
+            BigDecimal range = maxVal.subtract(minVal);
+            BigDecimal rand = minVal.add(range.multiply(BigDecimal.valueOf(Math.random())));
+            this.value = rand;
+        } catch (NumberFormatException e) {
+            throw new TensorInvalidInputException();
         }
-        BigDecimal minVal = new BigDecimal(min);
-        BigDecimal maxVal = new BigDecimal(max);
-        BigDecimal range = maxVal.subtract(minVal);
-        BigDecimal rand = minVal.add(range.multiply(BigDecimal.valueOf(Math.random())));
-        this.value = rand;
     }
 
     @Override
@@ -32,11 +36,13 @@ class ScalarImpl implements Scalar {
 
     @Override
     public void setValue(String value) {
-        if (!isValidNumber(value)) {
-            throw new TensorInvalidInputException("Invalid scalar input: " + value);
+        try {
+            this.value = new BigDecimal(value);
+        } catch (NumberFormatException e) {
+            throw new TensorInvalidInputException();
         }
-        this.value = new BigDecimal(value);
     }
+
 
     // 22. 비정적 add
     @Override
