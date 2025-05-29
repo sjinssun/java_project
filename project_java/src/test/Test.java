@@ -185,7 +185,7 @@ public class Test {
 
         //no.16
         System.out.println("no.16 | Scalar 비교 - scalar1 > scalar3 : " + (scalar1.compareTo(scalar3) > 0));
-        System.out.println("no.16 | Scalar 비교 - scalar3 < scalar1 : " + (scalar3.compareTo(scalar1) < 0));
+        System.out.println("no.16 | Scalar 비교 - scalar3 > scalar1 : " + (scalar3.compareTo(scalar1) > 0));
         System.out.println("no.16 | Scalar 비교 - scalar1 == scalar2 : " + (scalar1.compareTo(scalar2) == 0));
 
         //no.17
