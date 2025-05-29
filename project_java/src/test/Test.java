@@ -243,7 +243,7 @@ public class Test {
                 + matrix1.equals(Factory.createMatrix(3, 3, "4.0")));
 
         try {
-            Matrix m1 = Factory.createMatrix(2, 3, "1.0");
+            Matrix m1 = Factory.createMatrix(3, 3, "1.0");
             Matrix m2 = Factory.createMatrix(4, 2, "1.0");
             m1.multiply(m2);
         } catch (MatrixMulMismatchException e) {
