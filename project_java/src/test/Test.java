@@ -46,7 +46,7 @@ public class Test {
 
         //no.06
         Matrix matrix = Factory.createMatrix(3, 3, "2.0");
-        System.out.println("no.06 | 지정한 하나의 값을 모든 요소의 값으로 채워진 Matrix 생성. Factory.createMatrix(3, 3, \"2.0\") :\n"+matrix);
+        System.out.println("no.06 | 지정한 하나의 값을 모든 요소의 값으로 채워진 Matrix 생성. Factory.createMatrix(3, 3, \"2.0\") :\n" + matrix);
 
         //no.07
         matrix = Factory.createRandomMatrix(3, 3, "-3.0", "3.0");
@@ -62,7 +62,6 @@ public class Test {
         } catch (TensorInvalidInputException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println();
         try {
             filepath = "src/test/3by3matrix_InvalidValue.csv";
             System.out.println("2. matrix from csv file(" + filepath + ")");
@@ -71,7 +70,6 @@ public class Test {
         } catch (TensorInvalidInputException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println();
         try {
             filepath = "src/test/3by3matrix_InvalidRange.csv";
             System.out.println("3. matrix from csv file(" + filepath + ")");
@@ -80,7 +78,15 @@ public class Test {
         } catch (TensorInvalidInputException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println();
+        try {
+            filepath = "src/test/3by3matrix_NotExist.csv";
+            System.out.println("4. matrix from csv file(" + filepath + ")");
+            matrix = Factory.createMatrixFromCsv(filepath);
+            System.out.println(matrix);
+        } catch (TensorInvalidInputException e) {
+            System.out.println(e.getMessage());
+        }
+
 
         //no.09
         String[][] array2d = {{"2.0", "4.0"}, {"8.0", "16.0"}};
@@ -96,7 +102,7 @@ public class Test {
 
         //no.10
         matrix = Factory.createIdentityMatrix(4);
-        System.out.println("no.10 | 단위행렬 생성. Factory.createIdentityMatrix(4) : " );
+        System.out.println("no.10 | 단위행렬 생성. Factory.createIdentityMatrix(4) : ");
         System.out.println(matrix);
 
         try {
@@ -158,6 +164,7 @@ public class Test {
         scalar2 = Factory.createScalar("4");
         Scalar scalar3 = Factory.createScalar("8");
         System.out.println("no.15s | Scalar 동일성 비교 - scalar1.equals(scalar2) : " + scalar1.equals(scalar2));
+        System.out.println("no.15s | Scalar 동일성 비교 - 두 객체는 다른 객체이다. scalar1 == scalar2 (false) : " + (scalar1 == scalar2));
         System.out.println("no.15s | Scalar 동일성 비교 - scalar1.equals(scalar3) (false) : " + scalar1.equals(scalar3));
 
         //no.15v
@@ -165,6 +172,7 @@ public class Test {
         Vector vector2 = Factory.createVector(3, "1.0");
         Vector vector3 = Factory.createVector(4, "1.0");
         System.out.println("no.15v | Vector 동일성 비교 - vector1.equals(vector2) : " + vector1.equals(vector2));
+        System.out.println("no.15v | Vector 동일성 비교 - 두 객체는 다른 객체이다. vector1 == vector2 : " + (vector1 == vector2));
         System.out.println("no.15v | Vector 동일성 비교 - vector1.equals(vector3) (false) : " + vector1.equals(vector3));
 
         //no.15m
@@ -172,10 +180,13 @@ public class Test {
         Matrix matrix2 = Factory.createMatrix(3, 3, "3.0");
         Matrix matrix3 = Factory.createMatrix(3, 3, "-3.0");
         System.out.println("no.15m | Matrix 동일성 비교 - matrix1.equals(matrix2) : " + matrix1.equals(matrix2));
+        System.out.println("no.15m | Matrix 동일성 비교 - 두 객체는 다른 객체이다. matrix1 == matrix2 : " + (matrix1 == matrix2));
         System.out.println("no.15m | Matrix 동일성 비교 - matrix1.equals(matrix3) (false) : " + matrix1.equals(matrix3));
 
         //no.16
-        System.out.println("no.16 | Scalar 비교 - scalar1 < scalar3 : " + (scalar1.compareTo(scalar3) < 0));
+        System.out.println("no.16 | Scalar 비교 - scalar1 > scalar3 : " + (scalar1.compareTo(scalar3) > 0));
+        System.out.println("no.16 | Scalar 비교 - scalar3 < scalar1 : " + (scalar3.compareTo(scalar1) < 0));
+        System.out.println("no.16 | Scalar 비교 - scalar1 == scalar2 : " + (scalar1.compareTo(scalar2) == 0));
 
         //no.17
         scalar1 = Factory.createScalar("10");
@@ -223,7 +234,7 @@ public class Test {
         matrix2 = Factory.createIdentityMatrix(3);
         matrix1.add(matrix2);
         System.out.println("no.22 | Matrix 덧셈 결과 확인 (3x3) (-1 + I) = [[0 -1 -1] [-1 0 -1] [-1 -1 0]] : "
-                + matrix1.equals(Factory.createMatrixFromArray(new String[][]{ {"0.0", "-1.0", "-1.0"},
+                + matrix1.equals(Factory.createMatrixFromArray(new String[][]{{"0.0", "-1.0", "-1.0"},
                 {"-1.0", "0.0", "-1.0"},
                 {"-1.0", "-1.0", "0.0"}})));
 
@@ -236,20 +247,31 @@ public class Test {
         }
 
         // no.23
-        matrix1 = Factory.createMatrix(3, 4, "1.0");
-        matrix2 = Factory.createMatrix(4, 3, "1.0");
+        String[][] array1 = {{"1.0", "2.0", "3.0"}, {"4.0", "5.0", "6.0"}};
+        String[][] array2 = {{"1.0", "0.0"}, {"0.0", "1.0"}, {"1.0", "1.0"}};
+
+        matrix1 = Factory.createMatrixFromArray(array1);
+        matrix2 = Factory.createMatrixFromArray(array2);
+        matrix1.multiply(matrix2);
+        System.out.println("no.23 | Matrix 곱셈 결과 확인 : " +
+                matrix1.equals(Factory.createMatrixFromArray(new String[][]{{"4.0", "5.0"}, {"10.0", "11.0"}})));
+
+        matrix1 = Factory.createMatrixFromArray(array2);
+        matrix2 = Factory.createMatrixFromArray(array1);
         matrix1.multiplyRight(matrix2);
-        System.out.println("no.23 | Matrix 곱셈 결과 확인 [[4 4 4] x 3행] : "
-                + matrix1.equals(Factory.createMatrix(3, 3, "4.0")));
+        System.out.println("no.23 | Matrix 오른쪽 곱셈 결과 확인 : " + matrix2.equals(Factory.createMatrixFromArray(new String[][]{
+                {"1.0", "2.0", "3.0"},
+                {"4.0", "5.0", "6.0"},
+                {"5.0", "7.0", "9.0"}
+        })));
 
         try {
-            Matrix m1 = Factory.createMatrix(3, 3, "1.0");
+            Matrix m1 = Factory.createMatrix(2, 3, "1.0");
             Matrix m2 = Factory.createMatrix(4, 2, "1.0");
             m1.multiply(m2);
         } catch (MatrixMulMismatchException e) {
-            System.out.println("예외처리 | 행렬 곱셈 크기 불일치 : " + e.getMessage());
+            System.out.println("예외처리 | 행렬 곱셈 시 행과 열 크기 불일치 : " + e.getMessage());
         }
-
         //no.24
         scalar1 = Factory.createScalar("5");
         scalar2 = Factory.createScalar("7");
@@ -276,8 +298,6 @@ public class Test {
                 result.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "0.0"}, {"0.0", "1.0"}})));
 
         //no.29
-        String[][] array1 = {{"1.0", "2.0", "3.0"}, {"4.0", "5.0", "6.0"}};
-        String[][] array2 = {{"1.0", "0.0"}, {"0.0", "1.0"}, {"1.0", "1.0"}};
         matrix1 = Factory.createMatrixFromArray(array1);
         matrix2 = Factory.createMatrixFromArray(array2);
         System.out.println("no.29 | static Matrix 곱셈 결과 (2x3 * 3x2) 값 확인 : " +
@@ -297,15 +317,25 @@ public class Test {
 
         //no.32
         matrix1 = Factory.createMatrixFromArray(new String[][]{{"1.0", "1.0"}, {"1.0", "1.0"}});
-        matrix2 = Factory.createMatrixFromArray(new String[][]{{"2.0"}, {"2.0"}});
-        System.out.println("no.32 | Matrix 가로 연결 결과 확인 : " + Tensors.concatColumns(matrix1, matrix2).equals(
-                Factory.createMatrixFromArray(new String[][]{{"1.0", "1.0", "2.0"}, {"1.0", "1.0", "2.0"}})));
+        matrix2 = Factory.createMatrixFromArray(new String[][]{{"2.0", "2.0"}});
+        System.out.println("no.32 | Matrix 가로 연결 결과 확인 : " + Tensors.concatRows(matrix1, matrix2).equals(
+                Factory.createMatrixFromArray(new String[][]{
+                        {"1.0", "1.0"},
+                        {"1.0", "1.0"},
+                        {"2.0", "2.0"}
+                })));
 
         //no.33
-        matrix1 = Factory.createMatrixFromArray(new String[][]{{"5.0", "5.0"}});
-        matrix2 = Factory.createMatrixFromArray(new String[][]{{"10.0", "10.0"}});
-        System.out.println("no.33 | Matrix 세로 연결 결과 확인 : " + Tensors.concatRows(matrix1, matrix2).equals(
-                Factory.createMatrixFromArray(new String[][]{{"5.0", "5.0"}, {"10.0", "10.0"}})));
+        matrix1 = Factory.createMatrixFromArray(new String[][]{{"5.0", "5.0"}, {"8.0", "8.0"}});
+        matrix2 = Factory.createMatrixFromArray(new String[][]{
+                {"10.0", "10.0"},
+                {"12.0", "12.0"}
+        });
+        System.out.println("no.33 | Matrix 세로 연결 결과 확인 : " + Tensors.concatColumns(matrix1, matrix2).equals(
+                Factory.createMatrixFromArray(new String[][]{
+                        {"5.0", "5.0", "10.0", "10.0"},
+                        {"8.0", "8.0", "12.0", "12.0"}
+                })));
 
         //no.34
         array2d = new String[][]{{"1.0", "2.0"}, {"6.0", "12.0"}};
@@ -354,53 +384,57 @@ public class Test {
         matrix = Factory.createMatrix(2, 2, "0.0");
         System.out.println("no.44 | 영 행렬 여부 확인 : " + matrix.isZeroMatrix());
 
-        //no.45
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
+// no.45 | 행 교환
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         matrix.swapRows(0, 1);
-        System.out.println("no.45 | 행 교환 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"3.0", "4.0"}, {"1.0", "2.0"}})));
+        System.out.println("no.45 | 행 교환 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"4.0", "2.0"}, {"2.0", "1.0"}})));
 
-        //no.46
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
+// no.46 | 열 교환
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         matrix.swapColumns(0, 1);
-        System.out.println("no.46 | 열 교환 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "3.0"}})));
+        System.out.println("no.46 | 열 교환 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"2.0", "4.0"}})));
 
-        //no.47
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
+// no.47 | 행 스칼라 배 (row 1 × 2)
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         scalar = Factory.createScalar("2.0");
         matrix.scaleRow(1, scalar);
-        System.out.println("no.47 | 행 스칼라 배 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"6.0", "8.0"}})));
+        System.out.println("no.47 | 행 스칼라 배 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"8.0", "4.0"}})));
 
-        //no.48
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
+// no.48 | 열 스칼라 배 (col 0 × 2)
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         matrix.scaleColumn(0, scalar);
-        System.out.println("no.48 | 열 스칼라 배 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "2.0"}, {"6.0", "4.0"}})));
+        System.out.println("no.48 | 열 스칼라 배 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"4.0", "1.0"}, {"8.0", "2.0"}})));
 
-        //no.49
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
-        scalar = Factory.createScalar("2.0");
+// no.49 | 행 상수배 덧셈 (row0 += 2 × row1)
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         matrix.addScaledRow(0, 1, scalar);
-        System.out.println("no.49 | 행 상수배 덧셈 결과 확인 : " + matrix.equals(Factory.createMatrixFromArray(new String[][]{{"7.0", "10.0"}, {"3.0", "4.0"}})));
+        System.out.println("no.49 | 행 상수배 덧셈 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"10.0", "5.0"}, {"4.0", "2.0"}})));
 
-        //no.50
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
-        scalar = Factory.createScalar("2.0");
+// no.50 | 열 상수배 덧셈 (col1 += 2 × col0)
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         matrix.addScaledColumn(1, 0, scalar);
-        System.out.println("no.50 | 열 상수배 덧셈 결과 확인 : " +matrix.equals(Factory.createMatrixFromArray(new String[][]{{"1.0", "4.0"}, {"3.0", "10.0"}})));
+        System.out.println("no.50 | 열 상수배 덧셈 결과 확인 : " +
+                matrix.equals(Factory.createMatrixFromArray(new String[][]{{"2.0", "5.0"}, {"4.0", "10.0"}})));
 
-        //no.51
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"0.0", "1.0"}});
+// no.51 | RREF 변환 결과 확인
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
         Matrix rref = matrix.toRref();
-        System.out.println("no.51 | RREF 변환 결과 확인 : " + rref.isRref());
-        System.out.println(rref);
+        System.out.println("no.51 | RREF 변환 결과 확인 : \n " + rref);
 
-        //no.52
-        System.out.println("no.52 | RREF 여부 확인 : " + rref.isRref());
+// no.52 | isRref
+        System.out.println("no.52 | RREF 여부 확인 :  " + rref.isRref());
 
-        //no.53
-        matrix = Factory.createMatrixFromArray(new String[][]{{"1.0", "2.0"}, {"3.0", "4.0"}});
-        System.out.println("no.53 | 행렬식 확인 (1*4 - 2*3 = -2) : " + matrix.determinant().equals(Factory.createScalar("-2.0")));
+// no.53 | 행렬식 확인
+        matrix = Factory.createMatrixFromArray(new String[][]{{"2.0", "1.0"}, {"4.0", "2.0"}});
+        System.out.println("no.53 | 행렬식 확인 (2*2 - 1*4 = 0) : " +
+                matrix.determinant().equals(Factory.createScalar("0.0")));
 
-        //no.54
+// no.54 | 역행렬 계산 + 예외 처리
         matrix = Factory.createMatrixFromArray(new String[][]{{"4.0", "7.0"}, {"2.0", "6.0"}});
         Matrix expectedInv = Factory.createMatrixFromArray(new String[][]{{"0.6", "-0.7"}, {"-0.2", "0.4"}});
         Matrix inv = matrix.inverse();
@@ -420,4 +454,4 @@ public class Test {
             System.out.println("예외 발생: " + e.getMessage());
         }
     }
-}
+};

@@ -184,67 +184,67 @@ public class MatrixImpl implements Matrix {
 
     @Override
     public void multiply(Matrix other) {
-        // this = other * this (좌측 곱)
-        if (other.getMatrixColumnCount() != getMatrixRowCount()) {
-            throw new MatrixMulMismatchException("Matrix multiplication mismatch: left.columns != this.rows");
+        if (getMatrixColumnCount() != other.getMatrixRowCount()) {
+            throw new MatrixMulMismatchException("Matrix multiplication mismatch: this.columns != other.rows");
         }
 
-        int rows = other.getMatrixRowCount();       // A의 행
-        int cols = getMatrixColumnCount();          // B의 열
-        int inner = getMatrixRowCount();            // 공통 차원 (A의 열 == B의 행)
+        int rows = getMatrixRowCount();            // A의 행 (this)
+        int cols = other.getMatrixColumnCount();   // B의 열 (other)
+        int inner = getMatrixColumnCount();        // 공통 차원
 
         List<List<Scalar>> newElements = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {
-            List<Scalar> newRow = new ArrayList<>();
+            List<Scalar> row = new ArrayList<>();
             for (int j = 0; j < cols; j++) {
                 BigDecimal sum = BigDecimal.ZERO;
                 for (int k = 0; k < inner; k++) {
-                    BigDecimal a = new BigDecimal(other.getMatrixElement(i, k).getValue());
-                    BigDecimal b = new BigDecimal(getMatrixElement(k, j).getValue());
+                    BigDecimal a = new BigDecimal(getMatrixElement(i, k).getValue());
+                    BigDecimal b = new BigDecimal(other.getMatrixElement(k, j).getValue());
                     sum = sum.add(a.multiply(b));
                 }
-                newRow.add(Factory.createScalar(sum.toPlainString()));
+                row.add(Factory.createScalar(sum.toPlainString()));
             }
-            newElements.add(newRow);
+            newElements.add(row);
         }
 
-        // 기존 elements의 내부 데이터 교체 (final 필드라 재할당은 불가)
         elements.clear();
         elements.addAll(newElements);
     }
 
-        @Override
-        public void multiplyRight(Matrix other) {
-            // this = this * other (우측 곱)
-            if (getMatrixColumnCount() != other.getMatrixRowCount()) {
-                throw new MatrixMulMismatchException("Matrix multiplication mismatch: this.columns != right.rows");
-            }
+    @Override
+    public void multiplyRight(Matrix other) {
+        if (getMatrixColumnCount() != other.getMatrixRowCount()) {
+            throw new MatrixMulMismatchException("Mismatch: this.columns != other.rows");
+        }
+        if (!(other instanceof MatrixImpl)) {
+            throw new RuntimeException("multiplyRight only supports MatrixImpl");
+        }
 
-            int rows = getMatrixRowCount();
-            int cols = other.getMatrixColumnCount();
-            int inner = getMatrixColumnCount();
-            List<List<Scalar>> newElements = new ArrayList<>();
+        int rows = getMatrixRowCount();
+        int cols = other.getMatrixColumnCount();
+        int inner = getMatrixColumnCount();
 
-            for (int i = 0; i < rows; i++) {
-                List<Scalar> row = new ArrayList<>();
-                for (int j = 0; j < cols; j++) {
-                    BigDecimal sum = BigDecimal.ZERO;
-                    for (int k = 0; k < inner; k++) {
-                        BigDecimal a = new BigDecimal(getMatrixElement(i, k).getValue());
-                        BigDecimal b = new BigDecimal(other.getMatrixElement(k, j).getValue());
-                        sum = sum.add(a.multiply(b));
-                    }
-                    row.add(Factory.createScalar(sum.toPlainString()));
-                }
-                newElements.add(row);
-            }
+        List<List<Scalar>> newElements = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {
-            elements.set(i, newElements.get(i));
+            List<Scalar> row = new ArrayList<>();
+            for (int j = 0; j < cols; j++) {
+                BigDecimal sum = BigDecimal.ZERO;
+                for (int k = 0; k < inner; k++) {
+                    BigDecimal a = new BigDecimal(getMatrixElement(i, k).getValue());
+                    BigDecimal b = new BigDecimal(other.getMatrixElement(k, j).getValue());
+                    sum = sum.add(a.multiply(b));
+                }
+                row.add(Factory.createScalar(sum.stripTrailingZeros().toPlainString()));
+            }
+            newElements.add(row);
         }
-    }
 
+        MatrixImpl target = (MatrixImpl) other;
+        target.elements.clear();
+        target.elements.addAll(newElements);
+    }
     // 28. static add
     public static Matrix add(Matrix a, Matrix b) {
         Matrix copy = a.clone();
@@ -266,7 +266,7 @@ public class MatrixImpl implements Matrix {
             throw new TensorSizeMismatchException("matrix columns size is different");
         }
 
-        for (int i = 0; i < getMatrixRowCount(); i++) {
+        for (int i = 0; i < other.getMatrixRowCount(); i++) {
             for (int j = 0; j < other.getMatrixColumnCount(); j++) {
                 elements.get(i).add(other.getMatrixElement(i, j));
             }
