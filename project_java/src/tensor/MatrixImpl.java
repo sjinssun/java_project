@@ -254,8 +254,8 @@ public class MatrixImpl implements Matrix {
 
     // 29. static multiply
     public static Matrix multiply(Matrix a, Matrix b) {
-        Matrix copy = b.clone();
-        copy.multiply(a);
+        Matrix copy = a.clone();
+        copy.multiply(b);
         return copy;
     }
 
